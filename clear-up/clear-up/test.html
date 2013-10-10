@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<title>Test</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+		<script type="text/javascript" src="lib/jquery-1.7.2.js"></script>
+		<script type="text/javascript" src="lib/strengthen.js"></script>
+		<script type="text/javascript" src="lib/drag.js"></script>
+		<script type="text/javascript" src="lib/Lamp.js"></script>
+		<script type="text/javascript" src="src/dragDirection.js"></script>
+
+	</head>
+
+	<style>
+		#ct {
+			width : 500px;
+			height : 500px;
+			border: 2px solid green;
+			position: relative;
+		}
+
+		#showMsg {
+			position: absolute;
+			bottom: 0; 
+			width: 500px;
+			height : 30px;
+			border: 1px solid #000;
+		}
+	</style>	
+	<script type="text/javascript">
+		$(function() {
+
+			console.log('start'); 
+
+			bindMouseDirection($('#ct'), showMsg)
+			
+			function showMsg(dir) {
+				$('#showMsg').html(dir);
+			}
+		});	
+	</script>
+
+	<body>
+		<div id="ct">
+		</div>
+
+		<div id="showMsg">
+		</div>
+	</body>
+</html>
+	

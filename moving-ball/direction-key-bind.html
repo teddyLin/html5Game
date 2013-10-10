@@ -1,0 +1,50 @@
+<!doctype html>
+
+<html>
+
+	<head>
+		<script type="text/javascript" src="../jquery-1.10.2.js"></script>
+	</head>
+
+	<style type="text/css">
+		.game-wrap {
+			width: 600px;
+			height: 300px;
+			border: 2px solid red;
+		}
+	</style>
+	<script type="text/javascript">
+		$(function() {
+			console.log('onload');
+
+			//right 39
+			//left 37
+			//top 38
+			//down 40
+			var keyCode = {
+				left : 37, 
+				top : 38, 
+				right : 39, 
+				down : 40
+			}; 
+			$(document.body).bind('keydown', function(e) {
+				console.log(e.keyCode);
+				
+				var key = e.keyCode; 
+				if ( key == keyCode.left) {
+					console.log('left'); 
+				} else if ( key == keyCode.right ) {
+					console.log('right'); 
+				} else if ( key == keyCode.top) {
+					console.log('top')
+				} else if ( key == keyCode.down) {
+					console.log('down');
+				}
+			})
+		})
+	</script>
+
+	<body>
+		<canvas id="game-wrap" class='game-wrap'></canvas>
+	</body>
+</html>

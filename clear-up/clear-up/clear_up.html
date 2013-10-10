@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head>
+		<title>Test</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+		<link rel="stylesheet" type="text/css" href="css/clear_up.css">
+		<script type="text/javascript" src="lib/jquery-1.7.2.js"></script>
+		<script type="text/javascript" src="lib/strengthen.js"></script>
+		<script type="text/javascript" src="lib/drag.js"></script>
+		<script type="text/javascript" src="lib/Lamp.js"></script>
+		<script type="text/javascript" src="src/dragDirection.js"></script>
+
+	</head>
+
+	<style>
+
+	</style>
+	<script type="text/javascript">
+		$(function() {
+			console.log('start'); 
+
+			var word = ["A", "B", "C", "D", "E", "F", "G", "H", "I"], 
+				size = 5; 
+			var chessBoard = $('#ct');
+			generateChessBoard(chessBoard, size); 
+
+			
+			fillChess(chessBoard, size, word); 
+
+			$('.clear').bind('click', function() {
+				check_clear(chessBoard, size); 
+			})
+		})
+
+		function generateChessBoard(dom, size) {
+			var domCt = $(dom), 
+				size = size || 4, 
+				width = domCt.width(), 
+				height = domCt.height(), 
+				perWidth = parseInt(width / size) - 1, 
+				perHeight = parseInt(height /size) - 1; 
+
+			var spanTpl = '<span class="chess" data="0"></span>',
+				divCol = '<div class="chess_row"></div>'; 
+
+			// var fragment = document.createDocumentFragment();	
+			for (var i = 0; i < size; ++i) {
+				var tempDiv = $(divCol); 
+				tempDiv.css({
+					height : perHeight
+				});
+				
+				for (var j = 0; j < size; ++j) {
+					var spanObj = $(spanTpl); 
+					tempDiv.append(spanObj);
+					spanObj.css({
+						width : perWidth, 
+						height : perHeight
+					}); 
+
+					if (j == 0) {
+						spanObj.addClass('first'); 
+					} else if(j == size - 1) {
+						spanObj.addClass('last'); 
+					} 
+					spanObj.attr("row", i + 1); 
+					spanObj.attr("col", j + 1); 
+				}
+				if (i == size - 1) {
+					tempDiv.addClass('last');
+				}
+				tempDiv.appendTo(domCt); 
+				
+			}
+		}
+
+		function get_empty_chess(chessBoard) {
+			var ret = []; 
+			ret = chessBoard.find('.chess[data="0"]'); 
+			return ret;
+		}
+
+		function getRandomLetter(size, word) {
+			var index = Math.floor(Math.random() * size); 
+			return word[index]; 
+		}
+
+		function fillChess(chessBoard, size, word) {
+			var emptys = get_empty_chess(chessBoard);
+
+			for (var i = 0; i < emptys.length; ++i) {
+				var letter = getRandomLetter(size, word); 
+				$(emptys[i]).html(letter); 
+			}
+
+		}
+
+		function check_clear(chessBoard, size) {
+			multi_x_line_clear(chessBoard, size); 
+			multi_y_line_clear(chessBoard, size); 
+		}
+
+		function getChessPos(chess) {
+			return {
+				x : chess.attr('col'), 
+				y : chess.attr('row')
+			}
+		}
+
+		function getChessNeighbor(chess) {
+			var chess_pos = getChessPos(chess), 
+				neighbors_pos = [];
+
+			neighbors_pos.push({
+				x : chess_pos.x, 
+				y : chess_pos.y - 1
+			}); 
+			neighbors_pos.push({
+				x : chess_pos.x + 1, 
+				y : chess_pos.y
+			}); 
+			neighbors_pos.push({
+				x : chess_pos.x, 
+				y : chess_pos.y + 1
+			}); 
+			neighbors_pos.push({
+				x : chess_pos.x - 1, 
+				y : chess_pos.y 
+			}); 
+			console(neighbors_pos); 
+		}
+
+		// x = 0 ... size - 1
+		// y = 0 ... size - 1
+		function filter_chess_pos(neighbors_pos, size) {
+			var pos_item, 
+				min = 0, 
+				max = size - 1; 
+			for (i = 0; i < neighbors_pos.length; ++i) {
+				pos_item = neighbors_pos[i]; 
+				if (pos_item.x < min || pos_item.x > max || pos_item.y < min || pos_item.y > max) {
+					neighbors_pos.slice(i, 1); 
+				}
+			}
+			console.log(neighbors_pos); 
+		}
+
+		function x_line_clear(chessBoard, pos) {
+			var ret = []; 
+			var clear_chess = chessBoard.find('.chess[row="' + pos + '"]'), 
+				chess_item; 
+			for (var i = 0; i < clear_chess.length; ++i) {
+				chess_item = $(clear_chess[i]); 
+				if (i == 0) {
+					ret.push(chess_item.html()); 
+				}
+				var current_letter = chess_item.html(); 
+				if (ret[i - 1] === current_letter) {
+					ret.push(current_letter); 
+				} else {
+					ret = [current_letter]; 
+				}
+			}
+			if (ret.length < 3) {
+				ret = []; 
+			}
+			console.log(ret); 
+			return ret;
+		}
+
+		function y_line_clear(chessBoard, pos) {
+			var ret = []; 
+			var clear_chess = chessBoard.find('.chess[col="' + pos + '"]'), 
+				chess_item; 
+			for (var i = 0; i < clear_chess.length; ++i) {
+				chess_item = $(clear_chess[i]); 
+				if (i == 0) {
+					ret.push(chess_item.html()); 
+				}
+				var current_letter = chess_item.html(); 
+				console.log(current_letter); 
+				if (ret[i - 1] === current_letter) {
+					ret.push(current_letter); 
+				} else {
+					ret = [current_letter]; 
+				}
+			}
+			if (ret.length < 3) {
+				ret = []; 
+			}
+			console.log(ret);
+			return ret;
+		}
+
+		function multi_x_line_clear(chessBoard, size) {
+			for (var i = 0; i < size; i++) {
+				x_line_clear(chessBoard, i + 1); 
+			}
+		}
+
+		function multi_y_line_clear(chessBoard, size) {
+			for (var i = 0; i < size; i++) {
+				y_line_clear(chessBoard, i + 1); 
+			}
+		}
+
+	</script>
+
+	<body>
+		<div id="ct"></div>
+		<input type="button" class="clear" value="clear">
+	</body>
+</html>
+	

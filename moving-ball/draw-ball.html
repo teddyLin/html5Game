@@ -1,0 +1,38 @@
+<!doctype html>
+
+<html>
+
+	<head>
+		<script type="text/javascript" src="../jquery-1.10.2.js"></script>
+	</head>
+
+	<style type="text/css">
+		.game-wrap {
+			width: 600px;
+			height: 300px;
+			border: 2px solid red;
+		}
+	</style>
+	<script type="text/javascript">
+		$(function() {
+			console.log('onload');
+
+			var ctx = document.getElementById('game-wrap').getContext('2d'); 
+
+			drawBall(ctx, 100, 100, 5, "#00ff00");
+
+			function drawBall(ctx, px, py, radius, color) {
+				ctx.beginPath();
+				ctx.fillStyle = color; 
+				ctx.arc(px, px, radius, 0, Math.PI * 2, true); 
+				ctx.fill();
+				ctx.closePath();
+			}
+
+		})
+	</script>
+
+	<body>
+		<canvas id="game-wrap" class='game-wrap'></canvas>
+	</body>
+</html>
